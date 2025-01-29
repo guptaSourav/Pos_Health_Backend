@@ -9,9 +9,9 @@ const express = require("express");
 
 const router = express.Router();
 
+// Admin Routes
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
-router.get("/profile",accessControl(["admin"]),getAdminProfile);
-
+router.get("/profile", accessControl(["admin"]), getAdminProfile);
 
 module.exports = router;

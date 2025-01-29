@@ -9,7 +9,7 @@ const otpStore = new Map();
 // Patient Signup
 const signupPatient = async (req, res) => {
   try {
-    const { name, email, phone, age, gender } = req.body;
+    const { name, email, phone, age, gender, password } = req.body;
 
     // Check if patient already exists
     const existingPatient = await Patient.findOne({ email });
@@ -22,7 +22,10 @@ const signupPatient = async (req, res) => {
       upperCase: false,
       specialChars: false,
     });
-    otpStore.set(email, otp);
+
+    console.log("otp : ", otp);
+    // Store OTP along with patient details in-memory
+    otpStore.set(email, { otp, name, phone, age, gender, password });
 
     // Send OTP via email
     const transporter = nodemailer.createTransport({
@@ -52,25 +55,28 @@ const signupPatient = async (req, res) => {
 // Verify OTP and Create Patient
 const verifyOtp = async (req, res) => {
   try {
-    const { email, otp, password } = req.body;
+    const { email, otp } = req.body;
 
-    // Verify OTP
-    const storedOtp = otpStore.get(email);
-    if (!storedOtp || storedOtp !== otp) {
+    // Retrieve stored OTP and patient details
+    const storedData = otpStore.get(email);
+
+    // console.log("otp stored Data:", storedData);
+
+    if (!storedData || storedData.otp !== otp) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    // Remove OTP from store
+    // Remove OTP from store after successful verification
     otpStore.delete(email);
 
-    // Create patient
+    // Create patient using stored details
     const newPatient = new Patient({
-      name: req.body.name,
+      name: storedData.name,
       email,
-      phone: req.body.phone,
-      age: req.body.age,
-      gender: req.body.gender,
-      password, // Pre-hook will handle hashing
+      phone: storedData.phone,
+      age: storedData.age,
+      gender: storedData.gender,
+      password: storedData.password, // Pre-hook will handle hashing
     });
 
     await newPatient.save();
@@ -115,6 +121,5 @@ const loginPatient = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 module.exports = { signupPatient, verifyOtp, loginPatient };
