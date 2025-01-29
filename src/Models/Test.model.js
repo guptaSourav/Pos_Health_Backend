@@ -10,6 +10,7 @@ const testSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
+      enum:["Blood","Speciality"]
     },
     description: {
       type: String,
