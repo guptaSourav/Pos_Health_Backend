@@ -14,6 +14,7 @@ const blogSchema = new mongoose.Schema(
     imgUrl: { type: String, required: true },
     imgWidth: { type: Number },
     imgHeight: { type: Number },
+    published: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

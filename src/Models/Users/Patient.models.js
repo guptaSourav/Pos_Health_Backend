@@ -10,6 +10,7 @@ const patientSchema = new mongoose.Schema(
     address: { type: String },
     age: { type: Number },
     medicalHistory: { type: [String], default: [] }, // E.g., ["Diabetes"]
+    role: { type: String, default: "Patient" },
   },
   { timestamps: true }
 );

@@ -9,6 +9,9 @@ const BlogRouter = require("./Routes/Blog.routes");
 const HealthCollectionRequestRouter = require("./Routes/HomeCollectionRequest.routes");
 
 const CartRouter = require("./Routes/Cart.routes");
+const OrderRouter = require("./Routes/Order.routes");
+const AppointmentRouter = require("./Routes/Appointment.routes");
+
 const cors = require("cors");
 const app = express();
 
@@ -25,5 +28,10 @@ app.use("/pos-health/api/blog", BlogRouter);
 app.use("/pos-health/api/health-collection", HealthCollectionRequestRouter);
 
 app.use("/pos-health/api/cart", CartRouter);
+app.use("/pos-health/api/order", OrderRouter);
+app.use("/pos-health/api/appointment", AppointmentRouter);
+
+
+
 
 module.exports = app;
