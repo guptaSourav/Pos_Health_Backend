@@ -22,6 +22,7 @@ const createBlog = async (req, res) => {
       imgUrl,
       imgWidth: width,
       imgHeight: height,
+      published: true, 
     });
 
     await newBlog.save();
@@ -64,7 +65,7 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight } =
+    const { title, category, content, author, imgUrl, imgWidth, imgHeight,published } =
       req.body;
 
     if (!title || !category || !content || !author || !imgUrl) {
@@ -85,6 +86,7 @@ const updateBlog = async (req, res) => {
         imgUrl,
         imgWidth: width,
         imgHeight: height,
+        published,
       },
       { new: true }
     );

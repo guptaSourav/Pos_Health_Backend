@@ -6,7 +6,7 @@ const accessControl = (roles) => {
     try {
       const token = req.header("Authorization").replace("Bearer ", "");
 
-      console.log("token : ", token);
+      // console.log("token : ", token);
       if (!token) {
         return res
           .status(401)
@@ -17,7 +17,7 @@ const accessControl = (roles) => {
       const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
       req.user = decoded;
 
-      console.log("decode : ", decoded);
+      // console.log("decode : ", decoded);
 
       if (!roles.includes(decoded.role)) {
         return res
