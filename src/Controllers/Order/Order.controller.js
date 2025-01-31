@@ -2,6 +2,7 @@ const Order = require("../../Models/Order");
 const Cart = require("../../Models/Cart");
 const mongoose = require("mongoose");
 const { generateReceipt } = require("../../Utils/generateReceipt");
+const Test = require("../../Models/Test.model");
 
 // Create Order from Cart (With Validation & Error Handling)
 const createOrder = async (req, res) => {
@@ -40,6 +41,12 @@ const createOrder = async (req, res) => {
     });
 
     await newOrder.save();
+
+      // **Increment bookingsCount for each test in the order**
+      for (const item of cart.items) {
+        console.log("item : ",item);
+        await Test.findByIdAndUpdate(item.itemId, { $inc: { bookingsCount: 1 } });
+      }
 
     // Clear the cart after order placement
     await Cart.findOneAndDelete({ userId });

@@ -12,6 +12,8 @@ const CartRouter = require("./Routes/Cart.routes");
 const OrderRouter = require("./Routes/Order.routes");
 const AppointmentRouter = require("./Routes/Appointment.routes");
 
+const TestRouter = require("./Routes/Test.routes");
+
 const cors = require("cors");
 const app = express();
 
@@ -30,6 +32,8 @@ app.use("/pos-health/api/health-collection", HealthCollectionRequestRouter);
 app.use("/pos-health/api/cart", CartRouter);
 app.use("/pos-health/api/order", OrderRouter);
 app.use("/pos-health/api/appointment", AppointmentRouter);
+
+app.use("/pos-health/api/test", TestRouter);
 
 
 
