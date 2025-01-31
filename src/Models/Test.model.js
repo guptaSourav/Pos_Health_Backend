@@ -34,7 +34,11 @@ const testSchema = new mongoose.Schema(
     },
     published : {
         type: Boolean,
-        default: false
+        default: true
+    },
+    bookingsCount: {
+      type: Number,
+      default: 0,
     }
   },
   { timestamps: true }

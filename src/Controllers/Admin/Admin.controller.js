@@ -79,4 +79,6 @@ const getAdminProfile = async (req, res) => {
   }
 };
 
+
+
 module.exports = { registerAdmin, loginAdmin, getAdminProfile };
