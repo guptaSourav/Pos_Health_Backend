@@ -51,7 +51,7 @@ const signupPatient = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+ 
 // Verify OTP and Create Patient
 const verifyOtp = async (req, res) => {
   try {
