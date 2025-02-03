@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const AdminRouter = require("./Routes/Admin.routes");
 const PatientRouter = require("./Routes/Patient.routes");
 const DoctorRouter = require("./Routes/Doctor.routes");
@@ -14,11 +15,15 @@ const AppointmentRouter = require("./Routes/Appointment.routes");
 
 const TestRouter = require("./Routes/Test.routes");
 
-const cors = require("cors");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.use("/pos-health/api/admin", AdminRouter);
 app.use("/pos-health/api/patient", PatientRouter);
@@ -34,8 +39,5 @@ app.use("/pos-health/api/order", OrderRouter);
 app.use("/pos-health/api/appointment", AppointmentRouter);
 
 app.use("/pos-health/api/test", TestRouter);
-
-
-
 
 module.exports = app;
