@@ -4,7 +4,17 @@ const mongoose = require("mongoose");
 // Create Health Package
 const createHealthPackage = async (req, res) => {
   try {
-    const { packageName, description, price, includeTests, imgUrl } = req.body;
+    const {
+      packageName,
+      description,
+      price,
+      includeTests,
+      imgUrl,
+      gender,
+      ageGroup,
+      duration,
+      category
+    } = req.body;
 
     // Check if packageName already exists
     const existingPackage = await HealthPackage.findOne({ packageName });
@@ -19,11 +29,20 @@ const createHealthPackage = async (req, res) => {
       price,
       includeTests,
       imgUrl,
+      ageGroup,
+      gender,
+      duration,
+      category : category ? category : "General"
     });
 
     await newHealthPackage.save();
 
-    res.status(201).json({ message: "Health package created successfully", newHealthPackage });
+    res
+      .status(201)
+      .json({
+        message: "Health package created successfully",
+        newHealthPackage,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -33,7 +52,9 @@ const createHealthPackage = async (req, res) => {
 // Get All Health Packages
 const getAllHealthPackages = async (req, res) => {
   try {
-    const healthPackages = await HealthPackage.find().populate('includeTests');
+    const healthPackages = await HealthPackage.find().populate("includeTests");
+
+    console.log("health package : ", healthPackages);
     res.status(200).json(healthPackages);
   } catch (error) {
     console.error(error);
@@ -51,7 +72,9 @@ const getHealthPackageById = async (req, res) => {
       return res.status(400).json({ message: "Invalid health package ID" });
     }
 
-    const healthPackage = await HealthPackage.findById(id).populate('includeTests');
+    const healthPackage = await HealthPackage.findById(id).populate(
+      "includeTests"
+    );
     if (!healthPackage) {
       return res.status(404).json({ message: "Health package not found" });
     }
@@ -67,7 +90,17 @@ const getHealthPackageById = async (req, res) => {
 const updateHealthPackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { packageName, description, price, includeTests, imgUrl } = req.body;
+    const {
+      packageName,
+      description,
+      price,
+      includeTests,
+      imgUrl,
+      gender,
+      ageGroup,
+      duration,
+      category
+    } = req.body;
 
     // Check if ID is valid
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -76,7 +109,17 @@ const updateHealthPackage = async (req, res) => {
 
     const updatedHealthPackage = await HealthPackage.findByIdAndUpdate(
       id,
-      { packageName, description, price, includeTests, imgUrl },
+      {
+        packageName,
+        description,
+        price,
+        includeTests,
+        imgUrl,
+        gender,
+        ageGroup,
+        duration,
+        category
+      },
       { new: true }
     );
 
@@ -84,7 +127,12 @@ const updateHealthPackage = async (req, res) => {
       return res.status(404).json({ message: "Health package not found" });
     }
 
-    res.status(200).json({ message: "Health package updated successfully", updatedHealthPackage });
+    res
+      .status(200)
+      .json({
+        message: "Health package updated successfully",
+        updatedHealthPackage,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

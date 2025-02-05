@@ -9,9 +9,9 @@ const accessControl = require('../Middleware/AccessControle.middleware');
 
 const router = express.Router();
 
-router.post('/add-new',accessControl(["admin"]), createSpecialityTest);
-router.patch('/update/:id',accessControl(["admin"]), updateSpecialityTest);
-router.delete('/delete/:id',accessControl(["admin"]), deleteSpecialityTest);
+router.post('/add-new',createSpecialityTest);
+router.patch('/update/:id', updateSpecialityTest);
+router.delete('/delete/:id', deleteSpecialityTest);
 router.get('/get-all', getSpecialityTest);
 
 

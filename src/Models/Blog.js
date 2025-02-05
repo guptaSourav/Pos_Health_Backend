@@ -15,6 +15,7 @@ const blogSchema = new mongoose.Schema(
     imgWidth: { type: Number },
     imgHeight: { type: Number },
     published: { type: Boolean, default: false },
+    tags: { type: [String], default: [] },
   },
   { timestamps: true }
 );
