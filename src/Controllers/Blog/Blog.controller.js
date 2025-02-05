@@ -3,7 +3,7 @@ const Blog = require("../../Models/Blog"); // Adjust the path based on your proj
 // Create Blog
 const createBlog = async (req, res) => {
   try {
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight } =
+    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags } =
       req.body;
 
     if (!title || !category || !content || !author || !imgUrl) {
@@ -23,6 +23,7 @@ const createBlog = async (req, res) => {
       imgWidth: width,
       imgHeight: height,
       published: true, 
+      tags: tags && tags.length > 0 ? tags : [],
     });
 
     await newBlog.save();
@@ -65,7 +66,7 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight,published } =
+    const { title, category, content, author, imgUrl, imgWidth, imgHeight,published,tags } =
       req.body;
 
     if (!title || !category || !content || !author || !imgUrl) {
@@ -87,6 +88,7 @@ const updateBlog = async (req, res) => {
         imgWidth: width,
         imgHeight: height,
         published,
+        tags: tags && tags.length > 0 ? tags : [],
       },
       { new: true }
     );
@@ -120,10 +122,34 @@ const deleteBlog = async (req, res) => {
   }
 };
 
+const getPublishedBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ published: true });
+    res.status(200).json({ blogs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getUnpublishedBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ published: false });
+    res.status(200).json({ blogs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
 module.exports = {
   createBlog,
   getAllBlogs,
   getBlogById,
   updateBlog,
   deleteBlog,
+  getPublishedBlogs,
+  getUnpublishedBlogs,
 };
