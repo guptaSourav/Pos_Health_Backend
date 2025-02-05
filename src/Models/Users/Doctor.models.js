@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const doctorSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: false, unique: true },
     password: { type: String },
     specialty: {
       type: String,
@@ -15,7 +15,6 @@ const doctorSchema = new mongoose.Schema(
         "Dermatology",
         "Endocrinology",
         "Gastroentrology",
-        "Neurology",
         "Oncology",
         "Pediatrics",
         "Psychiatry",
@@ -26,7 +25,7 @@ const doctorSchema = new mongoose.Schema(
     qualification: { type: String, required: true },
     experience: { type: Number, required: true },
     availabilityTime: { type: [String], default: [] },
-    availabilityDate: { type: [Date], default: [] },
+    availabilityDays: { type: [String], default: [] },
     consultationFee: { type: Number, required: true },
     about: { type: String },
     imgUrl: { type: String },
