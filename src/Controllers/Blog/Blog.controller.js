@@ -3,8 +3,19 @@ const Blog = require("../../Models/Blog"); // Adjust the path based on your proj
 // Create Blog
 const createBlog = async (req, res) => {
   try {
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags, status, summary,publishedDate } =
-      req.body;
+    const {
+      title,
+      category,
+      content,
+      author,
+      imgUrl,
+      imgWidth,
+      imgHeight,
+      tags,
+      status,
+      summary,
+      publishedDate,
+    } = req.body;
 
     if (!title || !category || !content || !author || !imgUrl) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -68,34 +79,31 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags, status, summary,publishedDate  } =
-      req.body;
+    const updateFields = { ...req.body };
 
-    if (!title || !category || !content || !author || !imgUrl || !publishedDate || !status) {
-      return res.status(400).json({ message: "Missing required fields" });
+
+    // Ensure imgWidth and imgHeight have valid default values if provided but invalid
+    if (updateFields.imgWidth !== undefined && updateFields.imgWidth <= 0) {
+      updateFields.imgWidth = 800;
+    }
+    if (updateFields.imgHeight !== undefined && updateFields.imgHeight <= 0) {
+      updateFields.imgHeight = 600;
     }
 
-    // Set default width and height if 0 or not provided
-    const width = imgWidth && imgWidth > 0 ? imgWidth : 800;
-    const height = imgHeight && imgHeight > 0 ? imgHeight : 600;
+    // If summary is not provided, default to an empty string
+    if (updateFields.summary === undefined) {
+      updateFields.summary = "";
+    }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      id,
-      {
-        title,
-        category,
-        content,
-        author,
-        imgUrl,
-        imgWidth: width,
-        imgHeight: height,
-        publishedDate,
-        status,
-        summary: summary || "",
-        tags: tags && tags.length > 0 ? tags : [],
-      },
-      { new: true }
-    );
+    // Ensure tags are an array
+    if (updateFields.tags && !Array.isArray(updateFields.tags)) {
+      return res.status(400).json({ message: "Tags should be an array" });
+    }
+
+    // Find and update the blog
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
 
     if (!updatedBlog) {
       return res.status(404).json({ message: "Blog not found" });
@@ -103,7 +111,7 @@ const updateBlog = async (req, res) => {
 
     res.status(200).json({ message: "Blog updated successfully", updatedBlog });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating blog:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -145,8 +153,6 @@ const getUnpublishedBlogs = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
 
 module.exports = {
   createBlog,
