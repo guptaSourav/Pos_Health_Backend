@@ -144,6 +144,49 @@ const getPublishedBlogs = async (req, res) => {
   }
 };
 
+const publishedBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      { status: "published" },
+      { new: true }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.status(200).json({ message: "Blog status updated", updatedBlog });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const unpublishedBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      { status: "draft" },
+      { new: true }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.status(200).json({ message: "Blog status updated", updatedBlog });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getUnpublishedBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find({ published: false });
@@ -162,4 +205,6 @@ module.exports = {
   deleteBlog,
   getPublishedBlogs,
   getUnpublishedBlogs,
+  publishedBlog,
+  unpublishedBlog
 };
