@@ -14,9 +14,16 @@ const blogSchema = new mongoose.Schema(
     imgUrl: { type: String, required: true },
     imgWidth: { type: Number },
     imgHeight: { type: Number },
-    published: { type: Boolean, default: false },
+    publishedDate: { type: string },
     tags: { type: [String], default: [] },
+    status: {
+      type: String,
+      required: true,
+      enum: ["draft", "published"],
+      default: "draft",
   },
+  summary: { type: String},
+},
   { timestamps: true }
 );
 

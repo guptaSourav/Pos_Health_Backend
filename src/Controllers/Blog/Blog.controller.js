@@ -3,7 +3,7 @@ const Blog = require("../../Models/Blog"); // Adjust the path based on your proj
 // Create Blog
 const createBlog = async (req, res) => {
   try {
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags } =
+    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags, status, summary,publishedDate } =
       req.body;
 
     if (!title || !category || !content || !author || !imgUrl) {
@@ -22,7 +22,9 @@ const createBlog = async (req, res) => {
       imgUrl,
       imgWidth: width,
       imgHeight: height,
-      published: true, 
+      publishedDate,
+      status: status || "draft",
+      summary: summary || "",
       tags: tags && tags.length > 0 ? tags : [],
     });
 
@@ -66,10 +68,10 @@ const getBlogById = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, category, content, author, imgUrl, imgWidth, imgHeight,published,tags } =
+    const { title, category, content, author, imgUrl, imgWidth, imgHeight,tags, status, summary,publishedDate  } =
       req.body;
 
-    if (!title || !category || !content || !author || !imgUrl) {
+    if (!title || !category || !content || !author || !imgUrl || !publishedDate || !status) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -87,7 +89,9 @@ const updateBlog = async (req, res) => {
         imgUrl,
         imgWidth: width,
         imgHeight: height,
-        published,
+        publishedDate,
+        status,
+        summary: summary || "",
         tags: tags && tags.length > 0 ? tags : [],
       },
       { new: true }
