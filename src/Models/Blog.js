@@ -7,7 +7,7 @@ const blogSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Health News", "Medical News", "Wellness Articles", "Diet & Nutrition", "Other"], // Example categories
+      enum: ['Health Tips', 'Medical News', 'Wellness Articles', 'Diet & Nutrition'], // Example categories
     },
     content: { type: String, required: true },
     author: { type: String, required: true },
