@@ -32,7 +32,7 @@ const createBanner = async (req, res) => {
 
 const updateBanner = async (req, res) => {
   try {
-    const { updatedBanner } = req.body;
+    const updatedBanner = req.body;
     const { id } = req.params;
 
     const banner = await Banner.findByIdAndUpdate(id, updatedBanner, {
