@@ -6,8 +6,8 @@ const createBloodTest = async (req, res) => {
     const {
       name,
       description,
-      testPreparation,
-      parameterTested,
+      preparation,
+      parameters,
       turnaroundTime,
       price,
     } = req.body;
@@ -15,8 +15,8 @@ const createBloodTest = async (req, res) => {
       name,
       category: "Blood",
       description,
-      testPreparation,
-      parameterTested,
+      preparation,
+      parameters,
       turnaroundTime,
       price,
     });
@@ -72,9 +72,57 @@ const getBloodTest = async (req, res) => {
   }
 };
 
+
+const bloodTestPublished = async (req,res)=>{
+  try {
+    const {id}= req.params;
+
+    const updateBloodTest = await Test.findByIdAndUpdate(
+      id,
+      { published: true },
+      { new: true }
+    );
+
+    if (!updateBloodTest) {
+      return res.status(404).json({ message: "Blood Test not found" });
+    }
+
+    res.status(200).json({ message: "Blood Test status updated to published", updateBloodTest });
+
+  } catch (error) {
+    res.status(500).json({status:500,message:error.message});
+  }
+};
+
+
+const bloodTestUnPublished = async (req,res)=>{
+  try {
+    const {id}= req.params;
+
+    const updateBloodTest = await Test.findByIdAndUpdate(
+      id,
+      { published: false },
+      { new: true }
+    );
+
+    if (!updateBloodTest) {
+      return res.status(404).json({ message: "Blood Test not found" });
+    }
+
+    res.status(200).json({ message: "Blood Test status updated to unpublished", updateBloodTest });
+
+  } catch (error) {
+    res.status(500).json({status:500,message:error.message});
+  }
+};
+
+
+
 module.exports = {
   createBloodTest,
   updateBloodTest,
   deleteBloodTest,
   getBloodTest,
+  bloodTestPublished,
+  bloodTestUnPublished,
 };

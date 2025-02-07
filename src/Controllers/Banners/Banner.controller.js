@@ -35,6 +35,8 @@ const updateBanner = async (req, res) => {
     const updatedBanner = req.body;
     const { id } = req.params;
 
+    console.log("updated banner : ",updatedBanner);
+
     const banner = await Banner.findByIdAndUpdate(id, updatedBanner, {
       new: true,
     });
