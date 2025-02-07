@@ -2,7 +2,9 @@ const {
     createBloodTest,
     updateBloodTest,
     deleteBloodTest,
-    getBloodTest
+    getBloodTest,
+    bloodTestPublished,
+    bloodTestUnPublished,
 } = require("../Controllers/BloodTestManagement/BloodTest.controller");
 
 const express = require("express");
@@ -15,5 +17,8 @@ router.post("/add-new", createBloodTest);
 router.patch("/update/:id", updateBloodTest);
 router.delete("/delete/:id", deleteBloodTest);
 router.get("/get-all", getBloodTest);
+
+router.patch("/publish",bloodTestPublished);
+router.patch("/unpublish",bloodTestUnPublished);
 
 module.exports = router;

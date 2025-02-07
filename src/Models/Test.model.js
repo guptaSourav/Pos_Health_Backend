@@ -16,11 +16,11 @@ const testSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    testPreparation: {
+    preparation: {
       type: [String],
       required: true,
     },
-    parameterTested: {
+    parameters: {
       type: [String],
       required: true,
     },
