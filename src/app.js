@@ -8,6 +8,7 @@ const SpecialityTestRouter = require("./Routes/SpecialityTest.routes");
 const HealthPackageRouter = require("./Routes/HealthPackage.routes");
 const BlogRouter = require("./Routes/Blog.routes");
 const HealthCollectionRequestRouter = require("./Routes/HomeCollectionRequest.routes");
+const BannerRouter = require("./Routes/Banners.routes");
 
 const CartRouter = require("./Routes/Cart.routes");
 const OrderRouter = require("./Routes/Order.routes");
@@ -37,6 +38,7 @@ app.use("/pos-health/api/speciality-test", SpecialityTestRouter);
 app.use("/pos-health/api/health-package", HealthPackageRouter);
 app.use("/pos-health/api/blog", BlogRouter);
 app.use("/pos-health/api/health-collection", HealthCollectionRequestRouter);
+app.use("/pos-health/api/banner", BannerRouter);
 
 app.use("/pos-health/api/cart", CartRouter);
 app.use("/pos-health/api/order", OrderRouter);
