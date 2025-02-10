@@ -11,7 +11,7 @@ const accessControl = require("../Middleware/AccessControle.middleware");
 
 const router = express.Router();
 
-router.post("/create",accessControl(["Patient"]), createOrder);
+router.post("/create/:userId", createOrder);
 router.get("/get-all",accessControl(["admin"]), getAllOrders);
 router.get("/get-by-user",accessControl(["admin","Patient"]), getUserOrders);
 router.get("/get-by-order-id/:orderId",accessControl(["admin","Patient"]), getOrderById);

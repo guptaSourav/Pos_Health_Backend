@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema(
     items: [
       {
         itemId: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: "items.itemType" },
-        itemType: { type: String, enum: ["Test", "HealthPackage"], required: true },
+        itemType: { type: String, enum: ["Test", "HealthPackage","HealthRisk"]},
         name: { type: String, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true, default: 1 },
