@@ -8,7 +8,7 @@ const Test = require("../../Models/Test.model");
 const createOrder = async (req, res) => {
   try {
     const { address, contact } = req.body;
-    const userId = req.user.id
+    const {userId} = req.params
     // Validate User ID
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid user ID" });
