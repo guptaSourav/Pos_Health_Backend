@@ -1,8 +1,9 @@
 const Appointment = require("../../Models/Appointment"); // assuming model path
 const Doctor = require("../../Models/Users/Doctor.models"); // assuming model path
 
-async function createAppointment(patientName, patientContact, doctorId) {
+const createAppointment = async (req,res)=>{
   try {
+    const {patientName, patientContact, doctorId} = req.body;
     // Find the doctor
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
@@ -30,8 +31,10 @@ async function createAppointment(patientName, patientContact, doctorId) {
 }
 
 // Function to update the appointment status
-async function updateAppointmentStatus(appointmentId, newStatus) {
+const updateAppointmentStatus = async (req,res)=>{
   try {
+    const {newStatus} = req.body;
+    const appointmentId = req.params;
     // Validate the new status
     if (!["pending", "confirmed", "canceled"].includes(newStatus)) {
       return { message: "Invalid status" };
