@@ -38,7 +38,7 @@ app.use("/pos-health/api/blood-test", BloodTestRouter);
 app.use("/pos-health/api/speciality-test", SpecialityTestRouter);
 app.use("/pos-health/api/health-package", HealthPackageRouter);
 app.use("/pos-health/api/blog", BlogRouter);
-app.use("/pos-health/api/health-collection", HealthCollectionRequestRouter);
+app.use("/pos-health/api/home-collection", HealthCollectionRequestRouter);
 app.use("/pos-health/api/banner", BannerRouter);
 app.use("/pos-health/api/health-risk",HealthRiskRouter);
 
