@@ -3,17 +3,22 @@ const Doctor = require("../../Models/Users/Doctor.models"); // assuming model pa
 
 const createAppointment = async (req,res)=>{
   try {
-    const {patientName, patientContact, doctorId} = req.body;
+    const {patientName, patientContact, doctorId, reason} = req.body;
     // Find the doctor
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
       return { message: "Doctor not found" };
     }
 
+    if(!patientName || !patientCOntact || !reason){
+      res.send(401).json({status:401,message:"Please enter required fields"});
+    }
+
     // Create the appointment
     const newAppointment = new Appointment({
       patientName,
       patientContact,
+      reason,
       doctor: doctorId,
       status: "pending", // Initial status
     });
@@ -21,10 +26,7 @@ const createAppointment = async (req,res)=>{
     // Save the appointment
     await newAppointment.save();
 
-    return {
-      message: "Appointment created successfully",
-      appointment: newAppointment,
-    };
+    res.status(201).json({status:201,data:newAppointment});
   } catch (error) {
     return { message: "Error creating appointment", error };
   }

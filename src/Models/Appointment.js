@@ -14,6 +14,10 @@ const appointmentSchema = new mongoose.Schema({
     ref: 'Doctor',  // Reference to the Doctor model
     required: true
   },
+  reason:{
+    type:String,
+    required:true
+  },
   status: {
     type: String,
     enum: ['pending', 'confirmed','canceled'],
