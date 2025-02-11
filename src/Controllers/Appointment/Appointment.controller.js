@@ -7,7 +7,7 @@ const createAppointment = async (req,res)=>{
     // Find the doctor
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
-      return { message: "Doctor not found" };
+      res.status(401).json({status:401,message:"Doctor not found!"})
     }
 
     if(!patientName || !patientCOntact || !reason){
@@ -50,12 +50,12 @@ const updateAppointmentStatus = async (req,res)=>{
     );
 
     if (!appointment) {
-      return { message: "Appointment not found" };
+      res.status(401).json({status:401, message: 'Appointments not found'});
     }
 
-    return { message: "Appointment status updated successfully", appointment };
+    res.status(201).json({status:201, message: 'Appointments updated successfully', appointments });
   } catch (error) {
-    return { message: "Error updating appointment status", error };
+    res.status(500).json({status:500, message: error.message });
   }
 }
 
@@ -72,7 +72,7 @@ const getAllAppointments = async (req,res)=> {
         return { message: 'No appointments found' };
       }
   
-      return { message: 'Appointments retrieved successfully', appointments };
+      res.status(201).json({status:201, message: 'Appointments retrieved successfully', appointments });
     } catch (error) {
       return { message: 'Error retrieving appointments', error };
     }
