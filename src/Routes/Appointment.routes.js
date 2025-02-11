@@ -8,8 +8,8 @@ const accessControl = require("../Middleware/AccessControle.middleware");
 
 const router = express.Router();
 
-router.post("/create", createAppointment);
+router.post("/request", createAppointment);
 router.patch("/update-status/:appointmentId", updateAppointmentStatus);
-router.get("/get-all", getAllAppointments);
+router.get("/get-all-request", getAllAppointments);
 
 module.exports = router;
