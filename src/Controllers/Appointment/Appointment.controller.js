@@ -1,21 +1,24 @@
 const Appointment = require("../../Models/Appointment"); // assuming model path
 const Doctor = require("../../Models/Users/Doctor.models"); // assuming model path
 
-const createAppointment = async (req,res)=>{
+// Create an appointment
+const createAppointment = async (req, res) => {
   try {
-    const {patientName, contactNumber, doctor:doctorId, reason} = req.body;
-    // Find the doctor
+    const { patientName, contactNumber, doctor: doctorId, reason } = req.body;
+
+    // Validate required fields
+    if (!patientName || !contactNumber || !reason || !doctorId) {
+      return res.status(400).json({ status: 400, message: "All fields are required" });
+    }
+
+    // Check if the doctor exists
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
-      res.status(401).json({status:401,message:"Doctor not found!"})
+      return res.status(404).json({ status: 404, message: "Doctor not found!" });
     }
 
-    if(!patientName || !contactNumber || !reason){
-      res.send(401).json({status:401,message:"Please enter required fields"});
-    }
-
-    // Create the appointment
-    const newAppointment = new Appointment({
+    // Create and save the appointment
+    const newAppointment = await Appointment.create({
       patientName,
       contactNumber,
       reason,
@@ -23,66 +26,63 @@ const createAppointment = async (req,res)=>{
       status: "pending", // Initial status
     });
 
-    // Save the appointment
-    await newAppointment.save();
-
-    res.status(201).json({status:201,data:newAppointment});
+    return res.status(201).json({ status: 201, message: "Appointment created successfully", data: newAppointment });
   } catch (error) {
-    return { message: "Error creating appointment", error };
+    console.error("Error creating appointment:", error);
+    return res.status(500).json({ status: 500, message: "Internal server error", error: error.message });
   }
-}
+};
 
-// Function to update the appointment status
-const updateAppointmentStatus = async (req,res)=>{
+// Update appointment status
+const updateAppointmentStatus = async (req, res) => {
   try {
-    const {status} = req.body;
-    const {id} = req.params;
-    // Validate the new status
-    if (!["pending", "confirmed", "cancelled"].includes(status)) {
-      res.status(401).json({ message: "Invalid status" });
+    const { status } = req.body;
+    const { id } = req.params;
+
+    // Validate the status value
+    const validStatuses = ["pending", "confirmed", "cancelled"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ status: 400, message: "Invalid status value" });
     }
 
-    console.log("inside update appointment : ",status);
-    // Find the appointment by ID and update the status
+    // Update the appointment status
     const appointment = await Appointment.findByIdAndUpdate(
       id,
-      { status }, // Update only the status
-      { new: true } // Return the updated document
+      { status },
+      { new: true }
     );
 
     if (!appointment) {
-      res.status(401).json({status:401, message: 'Appointments not found'});
+      return res.status(404).json({ status: 404, message: "Appointment not found" });
     }
 
-    res.status(201).json({status:201, message: 'Appointments updated successfully', appointments });
+    return res.status(200).json({ status: 200, message: "Appointment status updated successfully", data: appointment });
   } catch (error) {
-    res.status(500).json({status:500, message: error.message });
+    console.error("Error updating appointment status:", error);
+    return res.status(500).json({ status: 500, message: "Internal server error", error: error.message });
   }
-}
+};
 
+// Get all appointments
+const getAllAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate("doctor", "name specialty") // Populate doctor details (name, specialty)
+      .sort({ createdAt: -1 }); // Sort by latest appointments
 
-// Function to get all appointments
-const getAllAppointments = async (req,res)=> {
-    try {
-      // Fetch all appointments from the database
-      const appointments = await Appointment.find()
-        .populate('doctor', 'name specialty') // Populating the doctor data (name and specialty)
-        .sort({ createdAt: -1 }); // Sort by creation date (most recent first)
-  
-      if (!appointments.length) {
-       res.status(401).json({status:401, message: 'No appointments found' });
-      }
-
-      console.log("appointment : ",appointments);
-  
-      res.status(201).json({status:201, message: 'Appointments retrieved successfully', appointments });
-    } catch (error) {
-      return { message: 'Error retrieving appointments', error };
-    }
+    return res.status(200).json({
+      status: 200,
+      message: "Appointments retrieved successfully",
+      data: appointments,
+    });
+  } catch (error) {
+    console.error("Error retrieving appointments:", error);
+    return res.status(500).json({ status: 500, message: "Internal server error", error: error.message });
   }
+};
 
 module.exports = {
   createAppointment,
   updateAppointmentStatus,
-  getAllAppointments
+  getAllAppointments,
 };
