@@ -5,7 +5,7 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  patientContact: {
+  contactNumber: {
     type: String,
     required: true
   },
@@ -20,12 +20,15 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed','canceled'],
+    enum: ['pending', 'confirmed','cancelled'],
     default: 'pending'
   },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  isRead:{
+    type:Boolean
   }
 });
 

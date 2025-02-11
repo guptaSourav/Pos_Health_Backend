@@ -36,14 +36,14 @@ const createRequest = async (req, res) => {
     if (!pinCode || !validator.isPostalCode(pinCode, "any")) {
       return res.status(400).json({ message: "Invalid pin code" });
     }
-    if (!preferredDate || !validator.isDate(preferredDate)) {
+    if (!preferredDate) {
       return res.status(400).json({ message: "Invalid preferred date" });
     }
 
-    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    // const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
     // Validate preferred time format (HH:mm)
-    if (!preferredTime || !timeRegex.test(preferredTime)) {
+    if (!preferredTime) {
       return res
         .status(400)
         .json({
@@ -78,7 +78,8 @@ const createRequest = async (req, res) => {
 const getAllRequests = async (req, res) => {
   try {
     const requests = await HomeCollectionRequest.find();
-    res.status(200).json({ requests });
+    
+    res.status(200).json({data:requests });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -111,11 +112,11 @@ const updateRequest = async (req, res) => {
     // Validate status
     if (
       ![
-        "Call Done",
-        "Follow Up",
-        "Deal Closed",
-        "Not Intrested",
-        "Pending",
+        "call_done",
+        "follow_up",
+        "deal_closed",
+        "not_intrested",
+        "pending",
       ].includes(status)
     ) {
       return res.status(400).json({ message: "Invalid status" });
