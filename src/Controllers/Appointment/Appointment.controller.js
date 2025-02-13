@@ -1,14 +1,21 @@
 const Appointment = require("../../Models/Appointment"); // assuming model path
 const Doctor = require("../../Models/Users/Doctor.models"); // assuming model path
-
+const Patient = require("../../Models/Users/Patient.models");
 // Create an appointment
 const createAppointment = async (req, res) => {
   try {
-    const { patientName, contactNumber, doctor: doctorId, reason } = req.body;
+    const { doctor: doctorId, reason } = req.body;
+    const patientId = req.user.id;
 
     // Validate required fields
-    if (!patientName || !contactNumber || !reason || !doctorId) {
+    if (!reason || !doctorId) {
       return res.status(400).json({ status: 400, message: "All fields are required" });
+    }
+
+    const patientData = await Patient.findById(patientId);
+
+    if(!patientData){
+      res.status(404).json({message:"No patient found!"});
     }
 
     // Check if the doctor exists
@@ -19,8 +26,7 @@ const createAppointment = async (req, res) => {
 
     // Create and save the appointment
     const newAppointment = await Appointment.create({
-      patientName,
-      contactNumber,
+      patient:patientId,
       reason,
       doctor: doctorId,
       status: "pending", // Initial status
@@ -67,9 +73,11 @@ const updateAppointmentStatus = async (req, res) => {
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate("doctor", "name specialty") // Populate doctor details (name, specialty)
-      .sort({ createdAt: -1 }); // Sort by latest appointments
+      .populate("doctor", "name specialty")
+      .populate("patient", "fullName age gender mobileNumber ") // Fetch patient details
+      .sort({ createdAt: -1 }); 
 
+   
     return res.status(200).json({
       status: 200,
       message: "Appointments retrieved successfully",

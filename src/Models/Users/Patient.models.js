@@ -3,11 +3,14 @@ const bcrypt = require('bcrypt');
 
 const patientSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String },
+    fullName: { type: String, required: true },
+    mobileNumber: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    pinCode: { type: String, required: true },
+    gender:{type:String,required:true},
     age: { type: Number },
     medicalHistory: { type: [String], default: [] }, // E.g., ["Diabetes"]
     role: { type: String, default: "Patient" },

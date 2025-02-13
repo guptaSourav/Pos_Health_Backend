@@ -1,63 +1,35 @@
 const HomeCollectionRequest = require("../../Models/HomeCollectionRequest");
 const validator = require("validator");
+const Patient = require("../../Models/Users/Patient.models");
 
 // Create Home Collection Request
 const createRequest = async (req, res) => {
   try {
-    const {
-      fullName,
-      mobileNumber,
-      address,
-      city,
-      pinCode,
-      preferredDate,
-      preferredTime,
-    } = req.body;
+    const { preferredDate, preferredTime } = req.body;
+    const patientId = req.user.id;
 
-    // Validate required fields
-    if (!fullName || fullName.trim().length === 0) {
-      return res.status(400).json({ message: "Full name is required" });
-    }
-    if (
-      !mobileNumber ||
-      !validator.isMobilePhone(mobileNumber) ||
-      mobileNumber.length !== 10
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Invalid mobile number, must be 10 digits" });
-    }
-    if (!address || address.trim().length === 0) {
-      return res.status(400).json({ message: "Address is required" });
-    }
-    if (!city || city.trim().length === 0) {
-      return res.status(400).json({ message: "City is required" });
-    }
-    if (!pinCode || !validator.isPostalCode(pinCode, "any")) {
-      return res.status(400).json({ message: "Invalid pin code" });
-    }
     if (!preferredDate) {
-      return res.status(400).json({ message: "Invalid preferred date" });
+      res.status(400).json({
+        message: "Invalid preferred date, must be a valid date formate",
+      });
     }
-
-    // const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
     // Validate preferred time format (HH:mm)
     if (!preferredTime) {
-      return res
-        .status(400)
-        .json({
-          message: "Invalid preferred time, must be in a valid time format",
-        });
+      res.status(400).json({
+        message: "Invalid preferred time, must be in a valid time format",
+      });
+    }
+
+    const patientData = await Patient.findById(patientId);
+
+    if (!patientData) {
+      res.status(404).json({ message: "No patient found!" });
     }
 
     // Create new home collection request
     const newRequest = new HomeCollectionRequest({
-      fullName,
-      mobileNumber,
-      address,
-      city,
-      pinCode,
+      patient: patientId,
       preferredDate,
       preferredTime,
     });
@@ -77,9 +49,12 @@ const createRequest = async (req, res) => {
 // Get All Home Collection Requests
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await HomeCollectionRequest.find();
-    
-    res.status(200).json({data:requests });
+    const requests = await HomeCollectionRequest.find().populate(
+      "patient",
+      "fullName mobileNumber address city pinCode"
+    );
+
+    res.status(200).json({ data: requests });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
