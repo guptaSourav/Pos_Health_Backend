@@ -8,7 +8,7 @@ const accessControl = require("../Middleware/AccessControle.middleware");
 
 const router = express.Router();
 
-router.post("/request", createAppointment);
+router.post("/request",accessControl(["Patient"]), createAppointment);
 router.patch("/update-status/:id", updateAppointmentStatus);
 router.get("/get-all-request", getAllAppointments);
 

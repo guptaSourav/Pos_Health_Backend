@@ -6,6 +6,7 @@ const accessControl = (roles) => {
     try {
       const token = req.header("Authorization").replace("Bearer ", "");
 
+
       // console.log("token : ", token);
       if (!token) {
         return res

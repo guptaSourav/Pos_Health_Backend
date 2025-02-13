@@ -11,7 +11,7 @@ const express = require("express");
 const router = express.Router();
 
 
-router.post("/request", createRequest);
+router.post("/request",accessControl(["Patient"]), createRequest);
 router.get("/get-all-request", getAllRequests);
 router.get("/get-request-by-id/:id", getRequestById);
 router.patch("/update-request/:id", updateRequest);
