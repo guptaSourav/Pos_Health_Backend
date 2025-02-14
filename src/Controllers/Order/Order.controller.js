@@ -7,19 +7,10 @@ const Test = require("../../Models/Test.model");
 // Create Order from Cart (With Validation & Error Handling)
 const createOrder = async (req, res) => {
   try {
-    const { address, contact } = req.body;
-    const {userId} = req.params
+    const userId = req.user.id;
     // Validate User ID
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid user ID" });
-    }
-
-    // Validate Address & Contact
-    if (!address || address.trim() === "") {
-      return res.status(400).json({ message: "Address is required" });
-    }
-    if (!contact || !/^\d{10}$/.test(contact)) {
-      return res.status(400).json({ message: "Invalid contact number" });
     }
 
     // Fetch Cart
@@ -34,10 +25,8 @@ const createOrder = async (req, res) => {
       userId,
       items: cart.items,
       totalAmount: cart.totalAmount,
-      address,
-      contact,
       paymentMethod: "COD",
-      status: "Pending",
+      status: "pending",
     });
 
     await newOrder.save();
@@ -64,18 +53,39 @@ const createOrder = async (req, res) => {
 // Get All Orders (Admin Only)
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    
+    const orders = await Order.find()
+      .populate("userId", "fullName address mobileNumber")
+      .sort({ createdAt: -1 });
 
     if (!orders.length) {
       return res.status(404).json({ message: "No orders found" });
     }
 
-    res.status(200).json({ orders });
+    const formattedOrders = orders.map((order) => ({
+      id: order._id.toString(),
+      patientName: order.userId.fullName || "Unknown",
+      address: order.userId.address || "N/A",
+      mobile: order.userId.mobileNumber || "N/A",
+      items: order.items.map((item) => ({
+        id: item.itemId,
+        name: item.name,
+        price: item.price,
+      })),
+      status: order.status.toLowerCase(),
+      createdAt: order.createdAt.toISOString(),
+      totalAmount: order.totalAmount,
+    }));
+
+    // console.log("formate data : ",formattedOrders);
+
+    res.status(200).json({status:200, ordersData: formattedOrders });
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 // Get Orders by User ID
 const getUserOrders = async (req, res) => {
@@ -125,6 +135,7 @@ const getOrderById = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   try {
+    
     const { orderId } = req.params;
     const { status } = req.body;
 
@@ -132,7 +143,7 @@ const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: "Invalid order ID" });
     }
 
-    const validStatuses = ["Pending", "Processing", "Completed", "Cancelled"];
+    const validStatuses = ["pending", "called", "follow-up", "closed"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
@@ -156,6 +167,7 @@ const updateOrderStatus = async (req, res) => {
     }
 
     res.status(200).json({
+      status:200,
       message: "Order status updated successfully",
       order,
       receiptUrl,
@@ -180,8 +192,8 @@ const deleteOrder = async (req, res) => {
     if (!deletedOrder) {
       return res.status(404).json({ message: "Order not found" });
     }
-
-    res.status(200).json({ message: "Order deleted successfully" });
+    
+    res.status(200).json({status:200, message: "Order deleted successfully" });
   } catch (error) {
     console.error("Error deleting order:", error);
     res.status(500).json({ message: "Internal server error" });
