@@ -15,7 +15,7 @@ const homeCollectionRequestSchema = new mongoose.Schema(
         "call Done",
         "follow_up",
         "deal_closed",
-        "not_intrested",
+        "not_interested",
         "pending",
       ],
       default: "pending",

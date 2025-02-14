@@ -90,7 +90,7 @@ const updateRequest = async (req, res) => {
         "call_done",
         "follow_up",
         "deal_closed",
-        "not_intrested",
+        "not_interested",
         "pending",
       ].includes(status)
     ) {
