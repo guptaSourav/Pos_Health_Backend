@@ -14,10 +14,8 @@ const orderSchema = new mongoose.Schema(
     ],
     receiptUrl: { type: String },
     totalAmount: { type: Number, required: true },
-    address: { type: String, required: true },
-    contact: { type: String, required: true },
     paymentMethod: { type: String, enum: ["COD"], default: "COD" },
-    status: { type: String, enum: ["Pending", "Processing", "Completed", "Cancelled"], default: "Pending" },
+    status: { type: String, enum: ["pending", "called", "follow-up", "closed"], default: "pending" },
   },
   { timestamps: true }
 );

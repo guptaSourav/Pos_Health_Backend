@@ -75,7 +75,7 @@ const addToCart = async (req, res) => {
     await cart.save();
     console.log("🛒 Cart Updated Successfully:", cart);
 
-    res.status(200).json({ message: "Item added to cart", cart });
+    res.status(200).json({status:200, message: "Item added to cart", cart });
   } catch (error) {
     console.error("❌ Error in addToCart:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -190,7 +190,7 @@ const removeCartItem = async (req, res) => {
     await cart.save();
     console.log("🗑️ Item removed successfully", itemId);
 
-    res.status(200).json({ message: "Item removed successfully", cart });
+    res.status(200).json({status:200, message: "Item removed successfully", cart });
   } catch (error) {
     console.error("❌ Error removing item from cart:", error);
     res.status(500).json({ message: "Internal server error" });

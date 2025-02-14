@@ -1,12 +1,12 @@
 const fs = require("fs");
 const PDFDocument = require("pdfkit");
 const path = require("path");
-const Patient = require("../Models/Users/Patient.models"); // Import Patient model
+const Patient = require("../Models/Users/Patient.models");
 
 const generateReceipt = async (order) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // Fetch patient details
+          
             const patient = await Patient.findById(order.userId);
             if (!patient) {
                 return reject(new Error("Patient not found"));
