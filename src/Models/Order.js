@@ -15,7 +15,7 @@ const orderSchema = new mongoose.Schema(
     receiptUrl: { type: String },
     totalAmount: { type: Number, required: true },
     paymentMethod: { type: String, enum: ["COD"], default: "COD" },
-    status: { type: String, enum: ["pending", "called", "follow-up", "closed"], default: "pending" },
+    status: { type: String, enum: ["pending", "called", "follow-up", "closed","completed"], default: "pending" },
   },
   { timestamps: true }
 );

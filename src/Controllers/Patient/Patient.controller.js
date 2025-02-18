@@ -76,9 +76,9 @@ const verifyOtp = async (req, res) => {
 
     // Create patient using stored details
     const newPatient = new Patient({
-      name: storedData.name,
+      fullName: storedData.name,
       email,
-      phone: storedData.phone,
+      mobileNumber: storedData.phone,
       age: storedData.age,
       gender: storedData.gender,
       password: storedData.password, // Pre-hook will handle hashing
