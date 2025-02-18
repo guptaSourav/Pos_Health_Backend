@@ -7,9 +7,9 @@ const patientSchema = new mongoose.Schema(
     password: { type: String, required: true },
     fullName: { type: String, required: true },
     mobileNumber: { type: String, required: true },
-    address: { type: String, required: true },
-    city: { type: String, required: true },
-    pinCode: { type: String, required: true },
+    address: { type: String, required: false },
+    city: { type: String, required: false },
+    pinCode: { type: String, required: false },
     gender:{type:String,required:true},
     age: { type: Number },
     medicalHistory: { type: [String], default: [] }, // E.g., ["Diabetes"]
