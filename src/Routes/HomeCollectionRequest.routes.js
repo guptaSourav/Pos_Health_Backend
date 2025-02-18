@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/request",accessControl(["Patient"]), createRequest);
 router.get("/get-all-request", getAllRequests);
 router.get("/get-request-by-id/:id", getRequestById);
-router.patch("/update-request/:id", updateRequest);
-router.delete("/delete-request/:id", deleteRequest);
+router.patch("/update-request/:id",accessControl(["admin"]), updateRequest);
+router.delete("/delete-request/:id",accessControl(["admin"]), deleteRequest);
 
 module.exports = router;

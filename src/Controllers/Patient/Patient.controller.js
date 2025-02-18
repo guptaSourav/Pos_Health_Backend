@@ -14,7 +14,7 @@ const otpStore = new Map();
 // Patient Signup
 const signupPatient = async (req, res) => {
   try {
-    const { name, email, phone, age, gender, password } = req.body;
+    const { fullName, email, mobileNumber, age, gender, password } = req.body;
 
     // Check if patient already exists
     const existingPatient = await Patient.findOne({ email });
@@ -30,7 +30,7 @@ const signupPatient = async (req, res) => {
 
     console.log("otp : ", otp);
     // Store OTP along with patient details in-memory
-    otpStore.set(email, { otp, name, phone, age, gender, password });
+    otpStore.set(email, { otp, fullName, mobileNumber, age, gender, password });
 
     // Send OTP via email
     const transporter = nodemailer.createTransport({
@@ -76,9 +76,9 @@ const verifyOtp = async (req, res) => {
 
     // Create patient using stored details
     const newPatient = new Patient({
-      name: storedData.name,
+      fullName: storedData.fullName,
       email,
-      phone: storedData.phone,
+      mobileNumber: storedData.mobileNumber,
       age: storedData.age,
       gender: storedData.gender,
       password: storedData.password, // Pre-hook will handle hashing

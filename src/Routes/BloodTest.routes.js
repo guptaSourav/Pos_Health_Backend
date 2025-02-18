@@ -13,12 +13,12 @@ const accessControl = require("../Middleware/AccessControle.middleware");
 const router = express.Router();
 
 // Create a new blood test
-router.post("/add-new", createBloodTest);
-router.patch("/update/:id", updateBloodTest);
-router.delete("/delete/:id", deleteBloodTest);
+router.post("/add-new",accessControl(["admin"]), createBloodTest);
+router.patch("/update/:id",accessControl(["admin"]), updateBloodTest);
+router.delete("/delete/:id",accessControl(["admin"]), deleteBloodTest);
 router.get("/get-all", getBloodTest);
 
-router.patch("/publish",bloodTestPublished);
-router.patch("/unpublish",bloodTestUnPublished);
+router.patch("/publish",accessControl(["admin"]),bloodTestPublished);
+router.patch("/unpublish",accessControl(["admin"]),bloodTestUnPublished);
 
 module.exports = router;
