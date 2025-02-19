@@ -205,7 +205,7 @@ const getCartDetailsById = async (req, res) => {
     const cart = await Cart.findOne({ userId: patientId });
 
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found for this user." });
+      return res.status(404).json({ success: false, message: "Cart not found", cart: null });
     }
 
     res.status(200).json({ success: true, cart });
