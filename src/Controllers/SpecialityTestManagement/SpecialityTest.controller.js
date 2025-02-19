@@ -71,9 +71,39 @@ const getSpecialityTest = async (req, res) => {
   }
 };
 
+const toggleSpecialityTestPublished = async (req, res) => {
+  try {
+
+  
+    const { id } = req.params;
+
+    // Find the existing blood test
+    const existingSpecialityTest = await Test.findById(id);
+    if (!existingSpecialityTest) {
+      return res.status(404).json({ message: "Speciality Test not found" });
+    }
+
+    // Toggle the 'published' status
+    const updatedSpecialityTest = await Test.findByIdAndUpdate(
+      id,
+      { published: !existingSpecialityTest.published },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: `Speciality Test status updated to ${updatedSpecialityTest.published ? "published" : "unpublished"}`,
+      updatedSpecialityTest
+    });
+
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
     createSpecialityTest,
     updateSpecialityTest,
     deleteSpecialityTest,
     getSpecialityTest,
+    toggleSpecialityTestPublished
 };

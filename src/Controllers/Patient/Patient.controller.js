@@ -16,6 +16,7 @@ const signupPatient = async (req, res) => {
   try {
     const { name, email, phone, age, gender, password } = req.body;
 
+    console.log("inside signup data : ",req.body);
     // Check if patient already exists
     const existingPatient = await Patient.findOne({ email });
     if (existingPatient) {
@@ -62,6 +63,7 @@ const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
+    console.log("inside verify : ",req.body);
     // Retrieve stored OTP and patient details
     const storedData = otpStore.get(email);
 

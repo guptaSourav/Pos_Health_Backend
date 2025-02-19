@@ -73,26 +73,34 @@ const getBloodTest = async (req, res) => {
 };
 
 
-const bloodTestPublished = async (req,res)=>{
+const toggleBloodTestPublished = async (req, res) => {
   try {
-    const {id}= req.params;
 
-    const updateBloodTest = await Test.findByIdAndUpdate(
-      id,
-      { published: true },
-      { new: true }
-    );
+    const { id } = req.params;
 
-    if (!updateBloodTest) {
+    // Find the existing blood test
+    const existingBloodTest = await Test.findById(id);
+    if (!existingBloodTest) {
       return res.status(404).json({ message: "Blood Test not found" });
     }
 
-    res.status(200).json({ message: "Blood Test status updated to published", updateBloodTest });
+    // Toggle the 'published' status
+    const updatedBloodTest = await Test.findByIdAndUpdate(
+      id,
+      { published: !existingBloodTest.published },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: `Blood Test status updated to ${updatedBloodTest.published ? "published" : "unpublished"}`,
+      updatedBloodTest
+    });
 
   } catch (error) {
-    res.status(500).json({status:500,message:error.message});
+    res.status(500).json({ status: 500, message: error.message });
   }
 };
+
 
 
 const bloodTestUnPublished = async (req,res)=>{
@@ -123,6 +131,6 @@ module.exports = {
   updateBloodTest,
   deleteBloodTest,
   getBloodTest,
-  bloodTestPublished,
+  toggleBloodTestPublished,
   bloodTestUnPublished,
 };

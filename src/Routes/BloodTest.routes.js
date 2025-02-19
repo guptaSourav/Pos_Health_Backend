@@ -3,7 +3,7 @@ const {
     updateBloodTest,
     deleteBloodTest,
     getBloodTest,
-    bloodTestPublished,
+    toggleBloodTestPublished,
     bloodTestUnPublished,
 } = require("../Controllers/BloodTestManagement/BloodTest.controller");
 
@@ -18,7 +18,7 @@ router.patch("/update/:id",accessControl(["admin"]), updateBloodTest);
 router.delete("/delete/:id",accessControl(["admin"]), deleteBloodTest);
 router.get("/get-all", getBloodTest);
 
-router.patch("/publish",accessControl(["admin"]),bloodTestPublished);
+router.patch("/toggle-publish/:id",accessControl(["admin"]),toggleBloodTestPublished);
 router.patch("/unpublish",accessControl(["admin"]),bloodTestUnPublished);
 
 module.exports = router;
